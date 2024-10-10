@@ -26,7 +26,7 @@ import { FileUpload } from "@/components/file-upload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 
-const fromSchema = z.object({
+const formSchema = z.object({
     fileUrl: z.string().min(1, {
         message: "Attachment is required."
     })
@@ -40,7 +40,7 @@ export const MessageFileModal = () => {
     const { apiUrl, query } = data;
 
     const form = useForm({
-        resolver: zodResolver(fromSchema),
+        resolver: zodResolver(formSchema),
         defaultValues: {
             fileUrl: "",
         }
@@ -52,7 +52,7 @@ export const MessageFileModal = () => {
     }
 
     const isLoading = form.formState.isSubmitting;
-    const onSubmit = async (values: z.infer<typeof fromSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const url = qs.stringifyUrl({
                 url: apiUrl || "",

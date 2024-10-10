@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 import { useEffect } from "react";
 
-const fromSchema = z.object({
+const formSchema = z.object({
     name: z.string().min(1, {
         message: "Server name is required."
     }),
@@ -86,7 +86,7 @@ export const EditServerModal = () => {
     const { server } = data;
 
     const form = useForm({
-        resolver: zodResolver(fromSchema),
+        resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
             imageUrl: ""

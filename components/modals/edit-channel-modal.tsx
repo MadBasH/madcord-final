@@ -35,7 +35,7 @@ import {
 import { ChannelType } from "@prisma/client";
 import { useEffect } from "react";
 
-const fromSchema = z.object({
+const formSchema = z.object({
     name: z.string().min(1, {
         message: "Channel name is required."
     }).refine(
@@ -55,7 +55,7 @@ export const EditChannelModal = () => {
 
     const isModalOpen = isOpen && type === "editChannel";
     const form = useForm({
-        resolver: zodResolver(fromSchema),
+        resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
             type: channel?.type || ChannelType.TEXT,
@@ -70,7 +70,7 @@ export const EditChannelModal = () => {
     }, [form, channel]);
 
     const isLoading = form.formState.isSubmitting;
-    const onSubmit = async (values: z.infer<typeof fromSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const url = qs.stringifyUrl({
                 url: `/api/channels/${channel?.id}`,

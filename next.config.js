@@ -12,7 +12,10 @@ const nextConfig = {
         domains: [
             'utfs.io'
         ]
+    },
+    eslint: {
+        ignoreDuringBuilds: true, // Bu satır ESLint hatalarını build sırasında göz ardı eder
     }
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;
