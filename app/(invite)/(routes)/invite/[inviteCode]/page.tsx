@@ -37,26 +37,46 @@ const InviteCodePage = async ({
         return redirect(`/servers/${existingServer.id}`);
     }
 
-    const server = await db.server.update({
-        where: {
-            inviteCode: params.inviteCode,
-        },
-        data: {
-            members: {
-                create: [
-                    {
-                        profileId: profile.id,
-                    }
-                ]
+    try {
+        const server = await db.server.update({
+            where: {
+                inviteCode: params.inviteCode,
+            },
+            data: {
+                members: {
+                    create: [
+                        {
+                            profileId: profile.id,
+                        }
+                    ]
+                }
             }
-        }
-    });
+        });
 
-    if (server) {
-        return redirect(`/servers/${server.id}`);
+        if (server) {
+            return redirect(`/servers/${server.id}`);
+        }
+    } catch (error: any) { // Hata tipini any olarak belirledik
+        // Hata durumunda
+        if (error.code === 'P2025') { // Geçersiz davet kodu hatası
+            return (
+                <div>
+                    <h1>Invalid or expired invite code.</h1>
+                    <p>Please check your invite code and try again.</p>
+                </div>
+            );
+        }
+
+        // Diğer hatalar için genel bir mesaj dönebiliriz
+        return (
+            <div>
+                <h1>An error occurred.</h1>
+                <p>Please try again later.</p>
+            </div>
+        );
     }
 
     return null;
 }
- 
+
 export default InviteCodePage;
