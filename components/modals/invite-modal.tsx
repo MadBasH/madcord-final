@@ -20,11 +20,11 @@ export const InviteModal = () => {
     const origin = useOrigin();
 
     const isModalOpen = isOpen && type === "invite";
-    const { server } = data;
+    const { server } = data || {}; // `data` ve `server` objesinin var olup olmadığını kontrol et
 
     const [copied, setCopied] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [inviteCode, setInviteCode] = useState(server?.inviteCode); // Davet kodunu durum olarak tanımlayın
+    const [inviteCode, setInviteCode] = useState(server?.inviteCode || ""); // İlk başta inviteCode boş olabilir
 
     const onCopy = () => {
         navigator.clipboard.writeText(inviteUrl);
@@ -48,7 +48,8 @@ export const InviteModal = () => {
         }
     }
 
-    const inviteUrl = `${origin}/invite/${inviteCode}`; // inviteCode durumunu kullanın
+    // Eğer inviteCode boşsa "Please generate a new link" mesajını göster
+    const inviteUrl = inviteCode ? `${origin}/invite/${inviteCode}` : "Please generate a new link";
 
     return (
         <Dialog open={isModalOpen} onOpenChange={onClose}>
@@ -64,9 +65,9 @@ export const InviteModal = () => {
                     </Label>
                     <div className="flex items-center mt-2 gap-x-2">
                         <Input disabled={isLoading} className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                        value={inviteUrl}
+                        value={inviteUrl} // inviteUrl ya gerçek link ya da mesaj olacak
                         />
-                        <Button disabled={isLoading} onClick={onCopy} size="icon">
+                        <Button disabled={isLoading || inviteUrl === "Please generate a new link"} onClick={onCopy} size="icon">
                             {copied ? <Check className="w-4 h-4"/> : <Copy className="w-4 h-4"/>}
                         </Button>
                     </div>
