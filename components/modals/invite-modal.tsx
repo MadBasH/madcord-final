@@ -24,6 +24,7 @@ export const InviteModal = () => {
 
     const [copied, setCopied] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [inviteCode, setInviteCode] = useState(server?.inviteCode); // Davet kodunu durum olarak tanımlayın
 
     const onCopy = () => {
         navigator.clipboard.writeText(inviteUrl);
@@ -38,7 +39,8 @@ export const InviteModal = () => {
         try {
             setIsLoading(true);
             const response = await axios.patch(`/api/servers/${server?.id}/invite-code`);
-            onOpen("invite", { server: response.data });
+            setInviteCode(response.data.inviteCode); // Yeni davet kodunu duruma kaydedin
+            alert("New invite code generated successfully!"); // Başarı mesajı göster
         } catch (error) {
             console.log(error);
         } finally {
@@ -46,7 +48,7 @@ export const InviteModal = () => {
         }
     }
 
-    const inviteUrl = `${origin}/invite/${server?.inviteCode}`;
+    const inviteUrl = `${origin}/invite/${inviteCode}`; // inviteCode durumunu kullanın
 
     return (
         <Dialog open={isModalOpen} onOpenChange={onClose}>
