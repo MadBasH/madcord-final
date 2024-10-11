@@ -53,13 +53,18 @@ export const CreateServerModal = () => {
     const isLoading = form.formState.isSubmitting;
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.post("/api/servers", values);
-            form.reset();
+            // Sunucuyu oluşturun ve yanıtı alın
+            const response = await axios.post("/api/servers", values);
+            
+            // Sunucu oluşturulduktan sonra modalı kapatın ve yönlendirin
+            handleClose(); // Modalı kapat
+            router.push(`/servers/${response.data.id}`); // Yeni sunucuya yönlendirin
             router.refresh();
         } catch (error) {
             console.log(error);
         }
     }
+    
 
     const handleClose = () => {
         form.reset();
