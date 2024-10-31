@@ -87,8 +87,12 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body
           className={cn(`${openSans.variable} antialiased`, // Geist yerine Open Sans kullanıldı
-            "bg-white dark:bg-[#313338]"
-  )}>
+            "bg-white dark:bg-[#313338]")}
+            style={{
+              background: "url('/background.gif') center center fixed no-repeat",
+              backgroundSize: "cover" // GIF'in tüm alanı kaplamasını sağlar
+            }}
+            >
             <ThemeProvider
               attribute="class"
               defaultTheme="dark"
