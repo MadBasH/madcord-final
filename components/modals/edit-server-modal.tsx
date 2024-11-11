@@ -37,47 +37,6 @@ const formSchema = z.object({
     })
 });
 
-// export const EditServerModal = () => {
-//     const { isOpen, onClose, type, data } = useModal();
-
-//     const router = useRouter();
-
-//     const isModalOpen = isOpen && type === "editServer";
-
-//     const { server } = data;
-
-//     const form = useForm({
-//         resolver: zodResolver(fromSchema),
-//         defaultValues: {
-//             name: "",
-//             imageUrl: "",
-//         }
-//     });
-
-//     useEffect(() => {
-//         if (server) {
-//             form.setValue("name", server.name);
-//             form.setValue("imageUrl", server.imageUrl);
-//         }
-//     }, [server, form]);
-
-//     const isLoading = form.formState.isSubmitting;
-//     const onSubmit = async (values: z.infer<typeof fromSchema>) => {
-//         try {
-//             await axios.patch(`/api/servers/${server?.id}`, values);
-//             form.reset();
-//             router.refresh();
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     }
-
-//     const handleClose = () => {
-//         form.reset();
-//         onClose();
-//     }
-
-
 export const EditServerModal = () => {
     const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
