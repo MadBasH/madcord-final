@@ -20,16 +20,13 @@ export const ServerSidebarEvents = ({
     const memberEventKey = `server:${serverId}:members`;
     const channelEventKey = `server:${serverId}:channels`;
 
-    // DEBUG: Hangi kanalı dinlediğimizi görelim
-    console.log("🎧 LISTENING TO KEY:", memberEventKey);
-
     const handleMemberUpdate = (data: any) => {
-       console.log("📨 MEMBER UPDATE GELDİ! Data:", data);
+
        router.refresh();
     };
 
     const handleChannelUpdate = (data: any) => {
-       console.log("📨 CHANNEL UPDATE GELDİ! Data:", data);
+
        router.refresh();
     };
 

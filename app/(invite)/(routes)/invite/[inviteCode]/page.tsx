@@ -70,15 +70,12 @@ const InviteCodePage = async ({
             });
 
             if (response.ok) {
-                console.log("✅ [INVITE PAGE] Socket API Başarılı!");
             } else {
                 // API hata dönerse sebebini logluyoruz
                 const errText = await response.text();
-                console.log("❌ [INVITE PAGE] Socket API Hatası:", response.status, errText);
             }
         } catch (error) {
             // Fetch hatası olursa (örneğin sunucu kapalıysa)
-            console.log("❌ [INVITE PAGE] Fetch Hatası:", error);
         }
 
         return redirect(`/servers/${server.id}`);

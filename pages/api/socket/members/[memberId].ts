@@ -35,15 +35,13 @@ export default async function handler(
     const server = await db.server.update({
       where: {
         id: serverId as string,
-        profileId: {
-          not: profile.id
-        }
+        profileId: profile.id, // DİKKAT: Buradaki "not" ifadesini kaldırdım, çünkü genellikle Owner işlem yapar.
       },
       data: {
         members: {
-          // DELETE işlemi (Kick)
+          // DELETE işlemi (Kick) -> BURASI DÜZELTİLDİ
           ...(req.method === "DELETE" && {
-            delete: {
+            deleteMany: {
               id: memberId as string,
               profileId: {
                 not: profile.id

@@ -51,13 +51,10 @@ export const SocketProvider = ({
     });
 
     socketInstance.on("disconnect", () => {
-      console.log("❌ SOCKET KOPTU");
       setIsConnected(false);
     });
     
     socketInstance.on("connect_error", (err: any) => {
-      // Tarayıcı konsolunda (F12) bu hatayı görürsen bana söylemelisin
-      console.log("⚠️ BAĞLANTI HATASI:", err); 
     });
 
     setSocket(socketInstance);

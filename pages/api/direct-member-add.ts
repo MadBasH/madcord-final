@@ -26,17 +26,15 @@ export default async function handler(
             serverId: serverId
         });
         
-        console.log("🚀 [API] Sinyal BAŞARIYLA gönderildi!");
+
     } else {
-        console.log("❌ [API] HATA: Socket.io sunucusu (res.socket.server.io) BULUNAMADI!");
-        console.log("⚠️ [API] Bu durum genellikle next dev ortamında ilk yüklemede olur.");
+
         return res.status(500).json({ message: "Socket server not ready" });
     }
     console.log("------------------------------------------");
 
     return res.status(200).json({ message: "Socket signal sent" });
   } catch (error) {
-    console.log("❌ [API] CRITICAL ERROR:", error);
     return res.status(500).json({ message: "Internal Error" });
   }
 }
