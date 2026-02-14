@@ -1,4 +1,3 @@
-// middleware.ts dosyası
 import {
   clerkMiddleware,
   createRouteMatcher,
@@ -16,30 +15,29 @@ const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)', 
   '/sign-up(.*)',
   '/api/uploadthing(.*)', 
-  '/api/(.*)', // API rotalarını Middleware'den muaf tutar.
+  '/api/(.*)', 
 ]);
 
 export default clerkMiddleware((auth, req) => {
   const isProtected = isProtectedRoute(req);
   const isPublic = isPublicRoute(req);
   
-  // Eğer talep korumalı bir rotayı eşleştiriyorsa VE herkese açık bir rota değilse, koru.
   if (isProtected && !isPublic) {
-    // Eğer kullanıcı giriş yapmamışsa
     if (!auth().userId) {
-      // Orijinal URL'yi alıyoruz, yönlendirme için kullanacağız
       const originalUrl = req.url;
-      
-      // Kullanıcıyı giriş sayfasına yönlendir
       return auth().redirectToSignIn({ returnBackUrl: originalUrl });
     }
-    
-    // Kullanıcı giriş yapmışsa, rotaya erişime izin ver
     auth().protect();
   }
 });
 
+// --- KRİTİK GÜNCELLEME BURADA ---
 export const config = {
-  // Middleware'in hangi yolları dinleyeceğini tanımlar.
-  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: [
+    // 1. _next klasörü, statik dosyalar VE "api/socket/io" rotası hariç her şeyi yakala
+    '/((?!.*\\..*|_next|api/socket/io).*)', 
+    '/', 
+    // 2. API rotalarını yakala AMA "api/socket/io" ise yakalama (Negative Lookahead)
+    '/(api(?!/socket/io)|trpc)(.*)', 
+  ],
 };

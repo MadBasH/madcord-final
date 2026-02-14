@@ -6,11 +6,11 @@ import { ServerHeader } from "./server-header";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ServerSearch } from "./server-search";
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
-import { channel } from "diagnostics_channel";
 import { Separator } from "@/components/ui/separator";
 import { ServerSection } from "./server-section";
 import { ServerChannel } from "./server-channel";
 import { ServerMember } from "./server-member";
+import { ServerSidebarEvents } from "./server-sidebar-events";
 
 interface ServerSidebarProps {
     serverId: string;
@@ -72,10 +72,15 @@ export const ServerSidebar = async ({
 
     return(
         <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
+            {/* Real-time dinleyici buraya eklendi - DOĞRU */}
+            <ServerSidebarEvents serverId={serverId} />
+            
+            {/* BURADAKİ DUPLICATE SİLİNDİ, TEK KALDI */}
             <ServerHeader 
                 server={server}
                 role={role}
             />
+            
             <ScrollArea className="flex-1 px-3">
                 <div className="mt-2">
                     <ServerSearch
