@@ -86,7 +86,7 @@ export const InitialModal = () => {
         // Davet kodu formatını kontrol et
         const validFormats = [
             "http://localhost:3000/invite/",
-            "https://madcord-final-production.up.railway.app/invite/"
+            "https://madcord-final.vercel.app/invite/"
         ];
     
         const isValidInviteCode = validFormats.some(format => inviteCode.startsWith(format));
