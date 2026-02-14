@@ -6,6 +6,7 @@ import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { ActionToolTip } from "../action-tooltip";
 import { ModalType, useModal } from "@/hooks/use-modal-store";
+import { useActiveCall } from "@/hooks/use-active-call";
 
 interface ServerChannelProps {
     channel: Channel;
@@ -29,9 +30,15 @@ export const ServerChannel = ({
     const router = useRouter();
 
     const Icon = iconMap[channel.type];
+    const { setActiveChannel } = useActiveCall();
 
     const onClick = () => {
-        router.push(`/servers/${params?.serverId}/channels/${channel.id}`)
+        if (channel.type === ChannelType.AUDIO || channel.type === ChannelType.VIDEO) {
+            setActiveChannel(channel.id);
+            return;
+        }
+        // Metin kanalıysa normal sayfa geçişi yap
+    router.push(`/servers/${params?.serverId}/channels/${channel.id}`);
     }
     const onAction = (e: React.MouseEvent, action: ModalType) => {
         e.stopPropagation();
