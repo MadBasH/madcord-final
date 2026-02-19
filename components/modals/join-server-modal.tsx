@@ -1,9 +1,9 @@
 "use client";
 
-import axios from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 import {
     Dialog,
@@ -23,49 +23,42 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FileUpload } from "@/components/file-upload";
-import { useRouter } from "next/navigation";
+
+// HATA BURADAYDI: useModalStore yerine useModal kullanıyoruz
 import { useModal } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
-    name: z.string().min(1, {
-        message: "Server name is required."
-    }),
-    imageUrl: z.string().min(1, {
-        message: "Server image is required."
+    inviteCode: z.string().min(1, {
+        message: "Invite code is required."
     })
 });
 
-export const CreateServerModal = () => {
-    // 1. DEĞİŞİKLİK: onOpen'ı buraya ekledik
+export const JoinServerModal = () => {
+    // BURAYI DA GÜNCELLEDİK
     const { isOpen, onClose, type, onOpen } = useModal();
-
     const router = useRouter();
 
-    const isModalOpen = isOpen && type === "createServer";
+    const isModalOpen = isOpen && type === "joinServer";
+
     const form = useForm({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: "",
-            imageUrl: "",
-        }
+        defaultValues: { inviteCode: "" }
     });
 
     const isLoading = form.formState.isSubmitting;
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            // Sunucuyu oluşturun ve yanıtı alın
-            const response = await axios.post("/api/servers", values);
+            // Kullanıcı davet linkinin tamamını girerse sadece sonundaki id'yi almak için:
+            const code = values.inviteCode.split("/").pop(); 
             
-            // Sunucu oluşturulduktan sonra modalı kapatın ve yönlendirin
-            handleClose(); // Modalı kapat
-            router.push(`/servers/${response.data.id}`); // Yeni sunucuya yönlendirin
-            router.refresh();
+            // Davet rotasına yönlendiriyoruz
+            router.push(`/invite/${code}`);
+            onClose();
         } catch (error) {
             console.log(error);
         }
-    }
-    
+    };
 
     const handleClose = () => {
         form.reset();
@@ -77,47 +70,30 @@ export const CreateServerModal = () => {
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center">
-                        Customize your server
+                        Join a Server
                     </DialogTitle>
                     <DialogDescription className="text-center text-zinc-500">
-                        Give your server a personality with a name and an image. You can always change it later.
+                        Enter your invite code or link to join an existing server.
                     </DialogDescription>
                 </DialogHeader>
+                
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <div className="space-y-8 px-6">
-                            <div className="flex items-center justify-center text-center">
-                                <FormField 
-                                    control={form.control}
-                                    name="imageUrl"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormControl>
-                                                <FileUpload
-                                                    endpoint="serverImage"
-                                                    value={field.value}
-                                                    onChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
                             <FormField 
                                 control={form.control}
-                                name="name"
+                                name="inviteCode"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                                            Server name
+                                            Invite Code
                                         </FormLabel>
                                         <FormControl>
-                                            <Input disabled={isLoading} className="bg-zinc-300/50 border-0
-                                            focus-visible:ring-0 text-black
-                                            focus-visible:ring-offset-0"
-                                            placeholder="Enter server name"
-                                            {...field}
+                                            <Input 
+                                                disabled={isLoading} 
+                                                className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                                                placeholder="Enter invite code or link"
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -125,25 +101,23 @@ export const CreateServerModal = () => {
                                 )}
                             />
                         </div>
-                        
-                        {/* 2. DEĞİŞİKLİK: Footer yapısını güncelledik */}
                         <DialogFooter className="bg-gray-100 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-y-4">
-                            <Button
+                            <Button 
                                 type="button"
                                 variant="ghost"
-                                onClick={() => onOpen("joinServer")}
+                                onClick={() => onOpen("createServer")}
                                 className="text-sm text-zinc-500 hover:text-zinc-600 hover:bg-transparent hover:underline transition"
                             >
-                                Join an existing server instead
+                                Create a new server instead
                             </Button>
-
-                            <Button variant="primary" disabled={isLoading}>
-                                Create
+                            
+                            <Button disabled={isLoading} variant="primary">
+                                Join
                             </Button>
                         </DialogFooter>
                     </form>
                 </Form>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
